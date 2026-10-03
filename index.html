@@ -47,7 +47,7 @@
             transition: all 0.3s ease;
         }
 
-        /* رأس الصفحة */
+        /* رأس الصفحة للواجهة */
         .header {
             background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
             color: white;
@@ -116,7 +116,7 @@
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
         }
 
-        /* حاوية الأهداف */
+        /* حاوية الأهداف في واجهة الموقع */
         .print-sections-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -234,7 +234,7 @@
             background: #eef2ff;
         }
 
-        /* عنصر النص الثابت المخصص للطباعة دائماً مخفي في الشاشة */
+        /* عنصر النص المخصص للطباعة */
         .print-mirror {
             display: none;
         }
@@ -313,12 +313,12 @@
         }
 
         /* ========================================================
-           تنسيقات الطباعة وحفظ PDF الصارمة والمستقرة 100% للهواتف
+           تنسيقات الطباعة وحفظ PDF (الأقسام تحت بعضها بكامل العرض)
            ======================================================== */
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 8mm;
+                margin: 10mm 12mm;
             }
 
             body {
@@ -340,34 +340,36 @@
                 display: none !important;
             }
 
+            /* ترويسة التقرير */
             .print-header {
                 display: block !important;
                 text-align: center;
-                margin-bottom: 8px;
-                border-bottom: 2px solid #4f46e5;
-                padding-bottom: 4px;
+                margin-bottom: 12px;
+                border-bottom: 2.5px solid #4f46e5;
+                padding-bottom: 6px;
             }
 
             .print-header h2 {
-                font-size: 13pt;
+                font-size: 14pt;
                 color: #1e293b;
                 font-weight: 800;
             }
 
+            /* شبكة البيانات الأساسية */
             .meta-grid {
                 background: #f8fafc !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 border: 1px solid #cbd5e1 !important;
-                padding: 6px !important;
-                margin-bottom: 8px !important;
+                padding: 8px 12px !important;
+                margin-bottom: 12px !important;
                 display: grid !important;
                 grid-template-columns: repeat(4, 1fr) !important;
-                gap: 6px !important;
+                gap: 8px !important;
             }
 
             .input-group label {
-                font-size: 7.5pt !important;
+                font-size: 8pt !important;
                 color: #475569 !important;
             }
 
@@ -376,39 +378,43 @@
                 background: transparent !important;
                 padding: 0 !important;
                 font-weight: bold;
-                font-size: 8.5pt !important;
+                font-size: 9.5pt !important;
                 color: #0f172a !important;
             }
 
+            /* جعل الأقسام الثلاثة تحت بعضها بعرض الصفحة كاملة */
             .print-sections-grid {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 6px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 10px !important;
             }
 
             .section-box {
-                padding: 6px !important;
-                border: 1px solid #94a3b8 !important;
-                border-radius: 6px !important;
+                padding: 8px 12px !important;
+                border: 1px solid #cbd5e1 !important;
+                border-radius: 8px !important;
                 background: #ffffff !important;
                 break-inside: avoid;
                 page-break-inside: avoid;
+                width: 100% !important;
             }
 
             .section-title {
-                font-size: 8.5pt !important;
-                margin-bottom: 5px !important;
-                padding-bottom: 2px !important;
-                border-bottom: 1px solid #cbd5e1 !important;
+                font-size: 9.5pt !important;
+                margin-bottom: 6px !important;
+                padding-bottom: 4px !important;
+                border-bottom: 1.5px solid #e2e8f0 !important;
             }
 
             .dynamic-item {
-                margin-bottom: 5px !important;
+                margin-bottom: 4px !important;
                 border-bottom: 1px dotted #e2e8f0;
-                padding-bottom: 4px;
+                padding-bottom: 3px;
             }
             .dynamic-item:last-child {
                 border-bottom: none;
+                margin-bottom: 0 !important;
+                padding-bottom: 0;
             }
 
             /* إخفاء سطر الإدخال في الطباعة */
@@ -416,23 +422,25 @@
                 display: none !important;
             }
 
-            /* إظهار النص الحقيقي البديل دائماً بثبات تام وبدون اعتماد على تأخير المتصفح */
+            /* إظهار النص الحقيقي البديل بوضوح وراحة تامة للقراءة */
             .print-mirror {
                 display: block !important;
-                font-size: 8pt !important;
-                line-height: 1.45 !important;
+                font-size: 9pt !important;
+                line-height: 1.5 !important;
                 white-space: pre-wrap !important;
                 word-break: break-word !important;
                 color: #1e293b !important;
+                padding: 1px 0;
             }
 
+            /* تذييل حقوق النشر */
             .print-footer-credit {
                 display: block !important;
                 text-align: center;
-                margin-top: 10px;
-                padding-top: 6px;
+                margin-top: 15px;
+                padding-top: 8px;
                 border-top: 1px dashed #cbd5e1;
-                font-size: 7.5pt;
+                font-size: 8pt;
                 color: #64748b;
             }
         }
@@ -587,10 +595,9 @@
             });
         }
 
-        // الطباعة المستقرة تماماً للهواتف
+        // الطباعة المستقرة تماماً للهواتف والحاسوب
         function prepareAndPrint() {
             syncAllMirrors();
-            // تأخير خفيف لضمان معالجة المتصفح للشاشات المحمولة
             setTimeout(() => {
                 window.print();
             }, 250);
