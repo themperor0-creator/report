@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كتابة التقرير الشهري</title>
+    <!-- استدعاء خط Cairo و FontAwesome للأيقونات -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #4338ca;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem 1rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 980px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        /* رأس الصفحة */
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        /* محتوى النموذج */
+        .form-content {
+            padding: 2.5rem;
+        }
+
+        /* معلومات التقرير الأساسية */
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+            background: #f1f5f9;
+            padding: 1.5rem;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group label i {
+            color: var(--primary-color);
+        }
+
+        .input-group input, .input-group select {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: white;
+            transition: all 0.3s ease;
+            outline: none;
+            width: 100%;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        /* حاوية الأهداف - متجاوبة ومرنة */
+        .print-sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 1.25rem;
+            align-items: stretch;
+        }
+
+        /* أقسام الأهداف */
+        .section-box {
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.25rem;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .section-title.target i { color: var(--primary-color); }
+        .section-title.achieved i { color: var(--success-color); }
+        .section-title.in-progress i { color: var(--warning-color); }
+
+        .items-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .dynamic-item {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        /* حقل Textarea مرن يتوسع للأسفل تلقائياً */
+        .dynamic-item textarea {
+            flex: 1;
+            padding: 0.65rem 0.85rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            resize: vertical;
+            min-height: 48px;
+            line-height: 1.5;
+            font-family: 'Cairo', sans-serif;
+            background: white;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        .dynamic-item textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn-remove {
+            background: #fee2e2;
+            color: #ef4444;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .btn-remove:hover {
+            background: #fecaca;
+        }
+
+        .btn-add {
+            background: #f8fafc;
+            color: var(--primary-color);
+            border: 1px dashed var(--primary-color);
+            padding: 0.55rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            margin-top: auto;
+        }
+
+        .btn-add:hover {
+            background: #eef2ff;
+        }
+
+        /* زر الطباعة والإجراءات */
+        .actions-bar {
+            text-align: center;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        .btn-print {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.85rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-print:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* حقوق النشر والتطوير في واجهة الموقع */
+        .footer-credit {
+            text-align: center;
+            padding: 1.25rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            background: #fafafa;
+            line-height: 1.6;
+        }
+
+        /* ترويسة وتذييل الطباعة */
+        .print-header {
+            display: none;
+        }
+        .print-footer-credit {
+            display: none;
+        }
+
+        .print-text-replacement {
+            display: none;
+        }
+
+        /* تحسينات الشاشات الصغيرة (الموبايل) */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 0.75rem 0.5rem;
+            }
+            .form-content {
+                padding: 1.25rem;
+            }
+            .header {
+                padding: 1.75rem 1rem;
+            }
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            .meta-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 1rem;
+            }
+            .print-sections-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .btn-print {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* تنسيق خاص عند الطباعة وحفظ PDF */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 8mm;
+            }
+
+            body {
+                background: white !important;
+                padding: 0 !important;
+                font-size: 10pt;
+            }
+
+            .container {
+                box-shadow: none !important;
+                border: none !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+            .header, .footer-credit, .btn-add, .btn-remove, .actions-bar {
+                display: none !important;
+            }
+
+            /* ترويسة التقرير الديناميكية */
+            .print-header {
+                display: block !important;
+                text-align: center;
+                margin-bottom: 8px;
+                border-bottom: 2px solid #4f46e5;
+                padding-bottom: 4px;
+            }
+            .print-header h2 {
+                font-size: 13pt;
+                color: #1e293b;
+                font-weight: 800;
+            }
+
+            .meta-grid {
+                background: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border: 1px solid #cbd5e1 !important;
+                padding: 6px !important;
+                margin-bottom: 8px !important;
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 5px !important;
+            }
+
+            .meta-grid input {
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                font-weight: bold;
+                font-size: 9pt;
+            }
+
+            .meta-grid label {
+                font-size: 7.5pt;
+                color: #475569;
+            }
+
+            /* تقسيم عرض الأقسام الثلاثة بالتساوي في الطباعة */
+            .print-sections-grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 6px !important;
+            }
+
+            .section-box {
+                padding: 6px !important;
+                border: 1px solid #94a3b8 !important;
+                border-radius: 6px !important;
+                background: #ffffff !important;
+                break-inside: avoid;
+                page-break-inside: avoid;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            .section-title {
+                font-size: 8.5pt !important;
+                margin-bottom: 4px !important;
+                padding-bottom: 2px !important;
+                border-bottom: 1px solid #cbd5e1 !important;
+            }
+
+            .dynamic-item {
+                margin-bottom: 4px;
+                display: block !important;
+            }
+
+            .dynamic-item textarea {
+                display: none !important;
+            }
+
+            .print-text-replacement {
+                display: block !important;
+                font-size: 8pt !important;
+                line-height: 1.4 !important;
+                white-space: pre-wrap !important;
+                word-break: break-word !important;
+                color: #1e293b !important;
+                padding: 2px 0 !important;
+                min-height: 14px;
+            }
+
+            /* إظهار حقوق النشر في أسفل صفحة الطباعة / PDF */
+            .print-footer-credit {
+                display: block !important;
+                text-align: center;
+                margin-top: 12px;
+                padding-top: 6px;
+                border-top: 1px dashed #cbd5e1;
+                font-size: 7.5pt;
+                color: #64748b;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- ترويسة تظهر فقط عند الطباعة (يتم تحديثها ديناميكياً) -->
+        <div class="print-header">
+            <h2 id="printTitle">تقرير جلسات</h2>
+        </div>
+
+        <!-- رأس الصفحة للواجهة -->
+        <div class="header">
+            <h1><i class="fa-solid fa-pen-to-square"></i> كتابة التقرير الشهري</h1>
+        </div>
+
+        <div class="form-content">
+            <!-- البيانات الأساسية -->
+            <div class="meta-grid">
+                <div class="input-group">
+                    <label><i class="fa-solid fa-calendar-days"></i> تقرير شهر:</label>
+                    <input type="text" id="reportMonth" placeholder="مثال: أكتوبر 2026">
+                </div>
+                <div class="input-group">
+                    <label><i class="fa-solid fa-layer-group"></i> القسم:</label>
+                    <input type="text" id="department" placeholder="مثال: تنمية المهارات" oninput="updatePrintTitle()">
+                </div>
+                <div class="input-group">
+                    <label><i class="fa-solid fa-child-reaching"></i> اسم الطفل:</label>
+                    <input type="text" id="childName" placeholder="اسم الطفل">
+                </div>
+                <div class="input-group">
+                    <label><i class="fa-solid fa-user-doctor"></i> الأخصائي:</label>
+                    <input type="text" id="specialistName" placeholder="اسم الأخصائي">
+                </div>
+            </div>
+
+            <!-- حاوية الأهداف -->
+            <div class="print-sections-grid">
+                <!-- 1. الأهداف التي تم العمل عليها -->
+                <div class="section-box">
+                    <div class="section-title target">
+                        <i class="fa-solid fa-list-check"></i> الأهداف التي تم العمل عليها
+                    </div>
+                    <div id="targetList" class="items-container">
+                        <div class="dynamic-item">
+                            <textarea placeholder="اكتب الهدف..." rows="1" oninput="autoResize(this)"></textarea>
+                            <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add" onclick="addItem('targetList', 'اكتب الهدف...')">
+                        <i class="fa-solid fa-plus"></i> إضافة هدف
+                    </button>
+                </div>
+
+                <!-- 2. الأهداف التي انجزها الطفل -->
+                <div class="section-box">
+                    <div class="section-title achieved">
+                        <i class="fa-solid fa-circle-check"></i> الأهداف المنجزة (المحققة)
+                    </div>
+                    <div id="achievedList" class="items-container">
+                        <div class="dynamic-item">
+                            <textarea placeholder="اكتب الهدف..." rows="1" oninput="autoResize(this)"></textarea>
+                            <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add" onclick="addItem('achievedList', 'اكتب الهدف...')">
+                        <i class="fa-solid fa-plus"></i> إضافة هدف
+                    </button>
+                </div>
+
+                <!-- 3. الأهداف مازال الطفل يتدرب عليها -->
+                <div class="section-box">
+                    <div class="section-title in-progress">
+                        <i class="fa-solid fa-hourglass-half"></i> الأهداف قيد التدريب
+                    </div>
+                    <div id="inProgressList" class="items-container">
+                        <div class="dynamic-item">
+                            <textarea placeholder="اكتب الهدف..." rows="1" oninput="autoResize(this)"></textarea>
+                            <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add" onclick="addItem('inProgressList', 'اكتب الهدف...')">
+                        <i class="fa-solid fa-plus"></i> إضافة هدف
+                    </button>
+                </div>
+            </div>
+
+            <!-- زر الطباعة -->
+            <div class="actions-bar">
+                <button class="btn-print" onclick="prepareAndPrint()">
+                    <i class="fa-solid fa-print"></i> طباعة التقرير / حفظ PDF
+                </button>
+            </div>
+            
+            <!-- حقوق النشر في الطباعة / الحفظ كـ PDF -->
+            <div class="print-footer-credit">
+                جميع حقوق التطوير والنشر محفوظة © تطوير الباش أخصائي سنوسي معروف - أخصائي التربية الخاصة
+            </div>
+        </div>
+
+        <!-- حقوق التطوير والنشر في المتصفح -->
+        <div class="footer-credit">
+            جميع حقوق التطوير والنشر محفوظة © تطوير الباش أخصائي سنوسي معروف - أخصائي التربية الخاصة
+        </div>
+    </div>
+
+    <script>
+        // تحديث عنوان التقرير عند الطباعة ديناميكياً حسب اسم القسم المدخل
+        function updatePrintTitle() {
+            const dept = document.getElementById('department').value.trim();
+            const printTitle = document.getElementById('printTitle');
+            if (dept) {
+                printTitle.textContent = 'تقرير جلسات ' + dept;
+            } else {
+                printTitle.textContent = 'تقرير جلسات';
+            }
+        }
+
+        // دالة لتوسيع حقل النص تلقائياً للأسفل عند الكتابة
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        }
+
+        // دالة الطباعة: استبدال الـ textarea بعناصر div متمددة لضمان عدم اختفاء أي سطر وتحديث العنوان
+        function prepareAndPrint() {
+            updatePrintTitle();
+
+            // تنظيف أي استبدالات سابقة إن وُجدت
+            document.querySelectorAll('.print-text-replacement').forEach(el => el.remove());
+
+            const textareas = document.querySelectorAll('.dynamic-item textarea');
+            textareas.forEach(ta => {
+                const printDiv = document.createElement('div');
+                printDiv.className = 'print-text-replacement';
+                printDiv.innerText = ta.value || '';
+                ta.parentNode.insertBefore(printDiv, ta);
+            });
+
+            window.print();
+
+            // إزالة العناصر المؤقتة بعد الطباعة
+            setTimeout(() => {
+                document.querySelectorAll('.print-text-replacement').forEach(el => el.remove());
+            }, 500);
+        }
+
+        function addItem(containerId, placeholderText) {
+            const container = document.getElementById(containerId);
+            const newItem = document.createElement('div');
+            newItem.className = 'dynamic-item';
+            newItem.innerHTML = `
+                <textarea placeholder="${placeholderText}" rows="1" oninput="autoResize(this)"></textarea>
+                <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+            `;
+            container.appendChild(newItem);
+        }
+
+        function removeItem(button) {
+            const container = button.closest('.items-container');
+            if (container.children.length > 1) {
+                button.closest('.dynamic-item').remove();
+            } else {
+                alert('يجب أن يحتوي القسم على بند واحد على الأقل.');
+            }
+        }
+    </script>
+</body>
+</html>
