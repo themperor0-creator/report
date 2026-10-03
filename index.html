@@ -100,7 +100,7 @@
             color: var(--primary-color);
         }
 
-        .input-group input, .input-group select {
+        .input-group input {
             padding: 0.75rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: 10px;
@@ -116,7 +116,7 @@
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
         }
 
-        /* حاوية الأهداف - متجاوبة ومرنة */
+        /* حاوية الأهداف */
         .print-sections-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -160,8 +160,15 @@
 
         .dynamic-item {
             display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .item-input-row {
+            display: flex;
             gap: 8px;
             align-items: flex-start;
+            width: 100%;
         }
 
         /* حقل Textarea مرن يتوسع للأسفل تلقائياً */
@@ -227,6 +234,11 @@
             background: #eef2ff;
         }
 
+        /* عنصر النص الثابت المخصص للطباعة دائماً مخفي في الشاشة */
+        .print-mirror {
+            display: none;
+        }
+
         /* زر الطباعة والإجراءات */
         .actions-bar {
             text-align: center;
@@ -267,15 +279,7 @@
             line-height: 1.6;
         }
 
-        /* ترويسة وتذييل الطباعة */
-        .print-header {
-            display: none;
-        }
-        .print-footer-credit {
-            display: none;
-        }
-
-        .print-text-replacement {
+        .print-header, .print-footer-credit {
             display: none;
         }
 
@@ -308,7 +312,9 @@
             }
         }
 
-        /* تنسيق خاص عند الطباعة وحفظ PDF */
+        /* ========================================================
+           تنسيقات الطباعة وحفظ PDF الصارمة والمستقرة 100% للهواتف
+           ======================================================== */
         @media print {
             @page {
                 size: A4 portrait;
@@ -318,7 +324,9 @@
             body {
                 background: white !important;
                 padding: 0 !important;
-                font-size: 10pt;
+                color: #0f172a !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
             .container {
@@ -332,7 +340,6 @@
                 display: none !important;
             }
 
-            /* ترويسة التقرير الديناميكية */
             .print-header {
                 display: block !important;
                 text-align: center;
@@ -340,6 +347,7 @@
                 border-bottom: 2px solid #4f46e5;
                 padding-bottom: 4px;
             }
+
             .print-header h2 {
                 font-size: 13pt;
                 color: #1e293b;
@@ -347,14 +355,20 @@
             }
 
             .meta-grid {
-                background: #ffffff !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
+                background: #f8fafc !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
                 border: 1px solid #cbd5e1 !important;
                 padding: 6px !important;
                 margin-bottom: 8px !important;
+                display: grid !important;
                 grid-template-columns: repeat(4, 1fr) !important;
-                gap: 5px !important;
+                gap: 6px !important;
+            }
+
+            .input-group label {
+                font-size: 7.5pt !important;
+                color: #475569 !important;
             }
 
             .meta-grid input {
@@ -362,15 +376,10 @@
                 background: transparent !important;
                 padding: 0 !important;
                 font-weight: bold;
-                font-size: 9pt;
+                font-size: 8.5pt !important;
+                color: #0f172a !important;
             }
 
-            .meta-grid label {
-                font-size: 7.5pt;
-                color: #475569;
-            }
-
-            /* تقسيم عرض الأقسام الثلاثة بالتساوي في الطباعة */
             .print-sections-grid {
                 display: grid !important;
                 grid-template-columns: repeat(3, 1fr) !important;
@@ -384,42 +393,43 @@
                 background: #ffffff !important;
                 break-inside: avoid;
                 page-break-inside: avoid;
-                height: auto !important;
-                overflow: visible !important;
             }
 
             .section-title {
                 font-size: 8.5pt !important;
-                margin-bottom: 4px !important;
+                margin-bottom: 5px !important;
                 padding-bottom: 2px !important;
                 border-bottom: 1px solid #cbd5e1 !important;
             }
 
             .dynamic-item {
-                margin-bottom: 4px;
-                display: block !important;
+                margin-bottom: 5px !important;
+                border-bottom: 1px dotted #e2e8f0;
+                padding-bottom: 4px;
+            }
+            .dynamic-item:last-child {
+                border-bottom: none;
             }
 
-            .dynamic-item textarea {
+            /* إخفاء سطر الإدخال في الطباعة */
+            .item-input-row {
                 display: none !important;
             }
 
-            .print-text-replacement {
+            /* إظهار النص الحقيقي البديل دائماً بثبات تام وبدون اعتماد على تأخير المتصفح */
+            .print-mirror {
                 display: block !important;
                 font-size: 8pt !important;
-                line-height: 1.4 !important;
+                line-height: 1.45 !important;
                 white-space: pre-wrap !important;
                 word-break: break-word !important;
                 color: #1e293b !important;
-                padding: 2px 0 !important;
-                min-height: 14px;
             }
 
-            /* إظهار حقوق النشر في أسفل صفحة الطباعة / PDF */
             .print-footer-credit {
                 display: block !important;
                 text-align: center;
-                margin-top: 12px;
+                margin-top: 10px;
                 padding-top: 6px;
                 border-top: 1px dashed #cbd5e1;
                 font-size: 7.5pt;
@@ -431,7 +441,7 @@
 <body>
 
     <div class="container">
-        <!-- ترويسة تظهر فقط عند الطباعة (يتم تحديثها ديناميكياً) -->
+        <!-- ترويسة تظهر فقط عند الطباعة -->
         <div class="print-header">
             <h2 id="printTitle">تقرير جلسات</h2>
         </div>
@@ -471,8 +481,11 @@
                     </div>
                     <div id="targetList" class="items-container">
                         <div class="dynamic-item">
-                            <textarea placeholder="اكتب الهدف..." rows="1" oninput="autoResize(this)"></textarea>
-                            <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+                            <div class="item-input-row">
+                                <textarea placeholder="اكتب الهدف..." rows="1" oninput="handleInput(this)"></textarea>
+                                <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                            <div class="print-mirror"></div>
                         </div>
                     </div>
                     <button type="button" class="btn-add" onclick="addItem('targetList', 'اكتب الهدف...')">
@@ -487,8 +500,11 @@
                     </div>
                     <div id="achievedList" class="items-container">
                         <div class="dynamic-item">
-                            <textarea placeholder="اكتب الهدف..." rows="1" oninput="autoResize(this)"></textarea>
-                            <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+                            <div class="item-input-row">
+                                <textarea placeholder="اكتب الهدف..." rows="1" oninput="handleInput(this)"></textarea>
+                                <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                            <div class="print-mirror"></div>
                         </div>
                     </div>
                     <button type="button" class="btn-add" onclick="addItem('achievedList', 'اكتب الهدف...')">
@@ -503,8 +519,11 @@
                     </div>
                     <div id="inProgressList" class="items-container">
                         <div class="dynamic-item">
-                            <textarea placeholder="اكتب الهدف..." rows="1" oninput="autoResize(this)"></textarea>
-                            <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+                            <div class="item-input-row">
+                                <textarea placeholder="اكتب الهدف..." rows="1" oninput="handleInput(this)"></textarea>
+                                <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                            <div class="print-mirror"></div>
                         </div>
                     </div>
                     <button type="button" class="btn-add" onclick="addItem('inProgressList', 'اكتب الهدف...')">
@@ -520,7 +539,7 @@
                 </button>
             </div>
             
-            <!-- حقوق النشر في الطباعة / الحفظ كـ PDF -->
+            <!-- حقوق النشر في الطباعة / PDF -->
             <div class="print-footer-credit">
                 جميع حقوق التطوير والنشر محفوظة © تطوير الباش أخصائي سنوسي معروف - أخصائي التربية الخاصة
             </div>
@@ -533,7 +552,7 @@
     </div>
 
     <script>
-        // تحديث عنوان التقرير عند الطباعة ديناميكياً حسب اسم القسم المدخل
+        // تحديث عنوان الطباعة
         function updatePrintTitle() {
             const dept = document.getElementById('department').value.trim();
             const printTitle = document.getElementById('printTitle');
@@ -544,49 +563,59 @@
             }
         }
 
-        // دالة لتوسيع حقل النص تلقائياً للأسفل عند الكتابة
-        function autoResize(textarea) {
+        // توسيع الحقل ونسخ القيمة فوراً إلى عنصر الطباعة الثابت
+        function handleInput(textarea) {
             textarea.style.height = 'auto';
             textarea.style.height = (textarea.scrollHeight) + 'px';
+            
+            const mirror = textarea.closest('.dynamic-item').querySelector('.print-mirror');
+            if (mirror) {
+                mirror.textContent = textarea.value;
+            }
         }
 
-        // دالة الطباعة: استبدال الـ textarea بعناصر div متمددة لضمان عدم اختفاء أي سطر وتحديث العنوان
-        function prepareAndPrint() {
+        // مزامنة جميع العناصر
+        function syncAllMirrors() {
             updatePrintTitle();
-
-            // تنظيف أي استبدالات سابقة إن وُجدت
-            document.querySelectorAll('.print-text-replacement').forEach(el => el.remove());
-
-            const textareas = document.querySelectorAll('.dynamic-item textarea');
-            textareas.forEach(ta => {
-                const printDiv = document.createElement('div');
-                printDiv.className = 'print-text-replacement';
-                printDiv.innerText = ta.value || '';
-                ta.parentNode.insertBefore(printDiv, ta);
+            const items = document.querySelectorAll('.dynamic-item');
+            items.forEach(item => {
+                const ta = item.querySelector('textarea');
+                const mirror = item.querySelector('.print-mirror');
+                if (ta && mirror) {
+                    mirror.textContent = ta.value;
+                }
             });
-
-            window.print();
-
-            // إزالة العناصر المؤقتة بعد الطباعة
-            setTimeout(() => {
-                document.querySelectorAll('.print-text-replacement').forEach(el => el.remove());
-            }, 500);
         }
+
+        // الطباعة المستقرة تماماً للهواتف
+        function prepareAndPrint() {
+            syncAllMirrors();
+            // تأخير خفيف لضمان معالجة المتصفح للشاشات المحمولة
+            setTimeout(() => {
+                window.print();
+            }, 250);
+        }
+
+        // الاستماع لأمر الطباعة العام بالمتصفح
+        window.addEventListener('beforeprint', syncAllMirrors);
 
         function addItem(containerId, placeholderText) {
             const container = document.getElementById(containerId);
             const newItem = document.createElement('div');
             newItem.className = 'dynamic-item';
             newItem.innerHTML = `
-                <textarea placeholder="${placeholderText}" rows="1" oninput="autoResize(this)"></textarea>
-                <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+                <div class="item-input-row">
+                    <textarea placeholder="${placeholderText}" rows="1" oninput="handleInput(this)"></textarea>
+                    <button type="button" class="btn-remove" onclick="removeItem(this)"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+                <div class="print-mirror"></div>
             `;
             container.appendChild(newItem);
         }
 
         function removeItem(button) {
             const container = button.closest('.items-container');
-            if (container.children.length > 1) {
+            if (container.querySelectorAll('.dynamic-item').length > 1) {
                 button.closest('.dynamic-item').remove();
             } else {
                 alert('يجب أن يحتوي القسم على بند واحد على الأقل.');
